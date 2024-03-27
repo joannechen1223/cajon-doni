@@ -3,7 +3,6 @@
 import { createServer } from 'http';
 import { WebSocket, WebSocketServer }from 'ws';
 import { Gpio } from 'onoff';
-import { connect } from 'http2';
 
 
 // Spinning the HTTP server and the WebSocket server.
@@ -29,19 +28,44 @@ wsServer.on('connection', (connection) => {
   connection.on('close', () => handleDisconnect());
 });
 
+const coolDownMs = 300;
 
-const channel = 17;
-const sensor = new Gpio(channel, 'in', 'both');
-let count = 0
-sensor.watch((err, value) => {
-  console.log('Movement Detected!', count);
-  count ++;
-  if(client != null && client.readyState === WebSocket.OPEN) {
-    client.send(JSON.stringify({ message: 'Movement Detected!', count }));
+
+const channel1 = 17;
+const sensor1 = new Gpio(channel1, 'in', 'both');
+let sensor1CoolDown = false;
+let count1 = 0
+sensor1.watch((err, value) => {
+  console.log('Sensor1 Movement Detected!', count1);
+  count1 ++;
+  if(client != null && client.readyState === WebSocket.OPEN && !sensor1CoolDown) {
+    client.send(JSON.stringify({ sensor: 1 }));
+    sensor1CoolDown = true;
+    setTimeout(() => {
+      sensor1CoolDown = false;
+    }, coolDownMs);
   }
 });
 
+const channel2 = 22;
+const sensor2 = new Gpio(channel2, 'in', 'both');
+let sensor2CoolDown = false;
+let count2 = 0
+sensor2.watch((err, value) => {
+  console.log('Sensor2 Movement Detected!', count2);
+  count2 ++;
+  if(client != null && client.readyState === WebSocket.OPEN && !sensor2CoolDown) {
+    client.send(JSON.stringify({ sensor: 2 }));
+    sensor2CoolDown = true;
+    setTimeout(() => {
+      sensor2CoolDown = false;
+    }, coolDownMs);
+  }
+});
+
+
 process.on('SIGINT',  () => { //on ctrl+c
-  sensor.unexport();
+  sensor1.unexport();
+  sensor2.unexport();
   process.exit();
 });
