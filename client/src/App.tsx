@@ -5,23 +5,26 @@ import { gameConfig } from "./gameConfig";
 import { useGameControl } from "./hooks/useGameControl";
 import { useMusic } from "./hooks/useMusic";
 import { useGlobalAudioPlayer } from "react-use-audio-player";
-import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
-import * as reactSpring from "@react-spring/three";
-import * as drei from "@react-three/drei";
-import * as fiber from "@react-three/fiber";
 import { SyncLoader } from "react-spinners";
 import { ReadyState } from "react-use-websocket";
+import Logo from "./assets/logo.svg";
 
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 
-function Button({ children, disabled = false, ...props }: ButtonProps) {
+function Button({
+  children,
+  disabled = false,
+  className,
+  ...props
+}: ButtonProps) {
   return (
     <button
       className={cn(
-        "bg-white",
-        "bg-opacity-40",
+        "bg-black",
+        "text-white",
+        "bg-opacity-80",
         "rounded-lg",
         "px-4",
         "py-2",
@@ -33,7 +36,8 @@ function Button({ children, disabled = false, ...props }: ButtonProps) {
           "cursor-not-allowed": disabled,
         },
         "box-content",
-        "text-[20px]"
+        "text-[24px]",
+        className
       )}
       disabled={disabled}
       {...props}
@@ -69,7 +73,7 @@ function App() {
   });
 
   const isMusicLoading = isLoading || !isReady;
-  const isWebSocketReady = wsReadyState !== ReadyState.OPEN;
+  const isWebSocketNotReady = wsReadyState !== ReadyState.OPEN;
 
   return (
     <div
@@ -78,44 +82,15 @@ function App() {
         "w-full",
         "h-[100svh]",
         "text-black",
-        "text-[18px]",
+        "text-[22px]",
         "flex",
         "justify-center",
         "items-center"
       )}
     >
-      <ShaderGradientCanvas
-        importedFiber={{ ...fiber, ...drei, ...reactSpring }}
-        style={{
-          position: "absolute",
-          top: 0,
-          zIndex: -1,
-          pointerEvents: "none",
-        }}
-      >
-        <ShaderGradient
-          control="query"
-          urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=1&color1=%23ffcc73&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=3d&pixelDensity=1.2&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uAmplitude=0&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
-        />
-      </ShaderGradientCanvas>
       {!hasStarted && !hasEnded ? (
         <div className="flex-col flex gap-4">
-          <div className="flex flex-row gap-4">
-            <Button
-              onClick={() => {
-                play();
-                playMusic();
-              }}
-              disabled={isMusicLoading || isWebSocketReady}
-            >
-              {isMusicLoading || isWebSocketReady ? (
-                <SyncLoader color="#000000" size={8} />
-              ) : (
-                "play"
-              )}
-            </Button>
-            <Button>calibrate</Button>
-          </div>
+          <img src={Logo} alt="logo" className="w-[350px]" />
           <div className="flex flex-row gap-x-2 items-center">
             <div
               className={cn("w-3 h-3 rounded-full", {
@@ -128,15 +103,31 @@ function App() {
           <div className="flex flex-row gap-x-2 items-center">
             <div
               className={cn("w-3 h-3 rounded-full", {
-                "bg-red-400": isWebSocketReady,
-                "bg-green-400": !isWebSocketReady,
+                "bg-red-400": isWebSocketNotReady,
+                "bg-green-400": !isWebSocketNotReady,
               })}
             />
             <div>
-              {isWebSocketReady
+              {isWebSocketNotReady
                 ? "waiting for WebSocket connection..."
                 : "WebSocket connected"}
             </div>
+          </div>
+          <div className="flex flex-row gap-4">
+            <Button
+              onClick={() => {
+                play();
+                playMusic();
+              }}
+              disabled={isMusicLoading || isWebSocketNotReady}
+              className="w-full mt-4"
+            >
+              {isMusicLoading || isWebSocketNotReady ? (
+                <SyncLoader color="#ffffff" size={8} />
+              ) : (
+                "play"
+              )}
+            </Button>
           </div>
         </div>
       ) : hasEnded ? (
