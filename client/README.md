@@ -1,3 +1,8 @@
+# How to run locally
+
+- `bun install` to install packages.
+- `bun dev` to start the server.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
