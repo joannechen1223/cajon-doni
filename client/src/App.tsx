@@ -9,6 +9,8 @@ import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
 import * as reactSpring from "@react-spring/three";
 import * as drei from "@react-three/drei";
 import * as fiber from "@react-three/fiber";
+import { SyncLoader } from "react-spinners";
+import { ReadyState } from "react-use-websocket";
 
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
@@ -30,7 +32,8 @@ function Button({ children, disabled = false, ...props }: ButtonProps) {
         {
           "cursor-not-allowed": disabled,
         },
-        "box-content"
+        "box-content",
+        "text-[20px]"
       )}
       disabled={disabled}
       {...props}
@@ -58,11 +61,15 @@ function App() {
     restart,
     reset,
     handleGameOver,
+    wsReadyState,
   } = useGameControl({
     gameStartTimeRef,
     sortedTs,
     beats,
   });
+
+  const isMusicLoading = isLoading || !isReady;
+  const isWebSocketReady = wsReadyState !== ReadyState.OPEN;
 
   return (
     <div
@@ -92,18 +99,44 @@ function App() {
         />
       </ShaderGradientCanvas>
       {!hasStarted && !hasEnded ? (
-        <div>
+        <div className="flex-col flex gap-4">
           <div className="flex flex-row gap-4">
             <Button
               onClick={() => {
                 play();
                 playMusic();
               }}
-              disabled={isLoading || !isReady}
+              disabled={isMusicLoading || isWebSocketReady}
             >
-              {isLoading || !isReady ? "loading..." : "play"}
+              {isMusicLoading || isWebSocketReady ? (
+                <SyncLoader color="#000000" size={8} />
+              ) : (
+                "play"
+              )}
             </Button>
             <Button>calibrate</Button>
+          </div>
+          <div className="flex flex-row gap-x-2 items-center">
+            <div
+              className={cn("w-3 h-3 rounded-full", {
+                "bg-red-400": isMusicLoading,
+                "bg-green-400": !isMusicLoading,
+              })}
+            />
+            <div>{isMusicLoading ? "loading music..." : "music loaded"}</div>
+          </div>
+          <div className="flex flex-row gap-x-2 items-center">
+            <div
+              className={cn("w-3 h-3 rounded-full", {
+                "bg-red-400": isWebSocketReady,
+                "bg-green-400": !isWebSocketReady,
+              })}
+            />
+            <div>
+              {isWebSocketReady
+                ? "waiting for WebSocket connection..."
+                : "WebSocket connected"}
+            </div>
           </div>
         </div>
       ) : hasEnded ? (
