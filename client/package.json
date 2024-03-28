@@ -17,6 +17,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-use-audio-player": "^2.2.0",
+    "react-use-websocket": "^4.8.1",
     "shadergradient": "^1.2.5",
     "tailwind-merge": "^2.2.2",
     "three": "0.150.0"
