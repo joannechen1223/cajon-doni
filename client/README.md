@@ -1,5 +1,6 @@
 # How to run locally
 
+Make sure to install [`bun`](https://bun.sh/) first.
 - `bun install` to install packages.
 - `bun dev` to start the server.
 
