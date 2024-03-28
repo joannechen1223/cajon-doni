@@ -89,8 +89,17 @@ function App() {
       )}
     >
       {!hasStarted && !hasEnded ? (
-        <div className="flex-col flex gap-4">
-          <img src={Logo} alt="logo" className="w-[350px]" />
+        <div className="flex-col flex gap-4 w-[450px]">
+          <img src={Logo} alt="logo" className="w-full mb-4" />
+          <div className="text-[18px]">
+            <h1 className="text-[22px] font-medium mb-2">How to play?</h1>
+            <p>
+              Hit the ??? of the cajon at right time when you see the red note.
+            </p>
+            <p>
+              Hit the ??? of the cajon at right time when you see the blue note.
+            </p>
+          </div>
           <div className="flex flex-row gap-x-2 items-center">
             <div
               className={cn("w-3 h-3 rounded-full", {
