@@ -160,11 +160,11 @@ function App() {
             "overflow-hidden"
           )}
         >
-          Score: {countHit}
-          <div className="overflow-hidden w-full h-[30px] rounded-full relative mt-4">
+          <div className="mb-8 text-[20px] font-medium">Score: {countHit}</div>
+          <div className="overflow-hidden w-full h-[60px] rounded-full relative mt-4">
             <div
               className={cn(
-                "absolute left-0 top-0 w-[30px] aspect-square bg-gradient-to-r from-transparent from-[50%]",
+                "absolute left-0 top-0 w-[60px] aspect-square bg-gradient-to-r from-transparent from-[50%]",
 
                 "before:content-[''] before:absolute before:inset-[0px] before:bg-radial before:opacity-0",
                 {
@@ -212,7 +212,7 @@ function App() {
                   delay: (b.ts - gameConfig.showUpDuration) / 1000,
                 }}
                 className={cn(
-                  `w-[30px]`,
+                  `w-[60px]`,
                   "aspect-square",
                   "rounded-full",
                   "absolute",
