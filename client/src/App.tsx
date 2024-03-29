@@ -94,10 +94,10 @@ function App() {
           <div className="text-[18px]">
             <h1 className="text-[22px] font-medium mb-2">How to play?</h1>
             <p>
-              Hit the ??? of the cajon at right time when you see the red note.
+              Hit the center of the cajon at right time when you see the red note.
             </p>
             <p>
-              Hit the ??? of the cajon at right time when you see the blue note.
+              Hit the side of the cajon at right time when you see the blue note.
             </p>
           </div>
           <div className="flex flex-row gap-x-2 items-center">
